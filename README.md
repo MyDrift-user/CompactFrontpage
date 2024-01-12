@@ -13,3 +13,5 @@ With this userscript the Modules on the Startpage of BBBaden's Moodle adaption w
 #### Plans:
 
 * [ ] Fix formatting (size, centered ..)
+* [ ] Fix image sizes
+* [ ] Search for good Text size & Font
