@@ -7,7 +7,7 @@
 
 With this userscript the Modules on the Startpage of BBBaden's Moodle adaption will look simpler and sized down.
 
-[With]()
+[Without](https://github.com/MyDrift-user/CompactFrontpage/blob/main/without.png)[With](https://github.com/MyDrift-user/CompactFrontpage/blob/main/with.png)
 
 
 #### Plans:
