@@ -4,7 +4,7 @@
 // @author       MyDrift (https://github.com/MyDrift-user/)
 // @version      1.0
 // @match        *://moodle.bbbaden.ch/
-// @icon         https://github.com/MyDrift-user/CompactFrontpage/blob/main/compact.png
+// @icon         https://github.com/MyDrift-user/CompactFrontpage/blob/main/compact.png?raw=true
 // @downloadURL  https://github.com/MyDrift-user/CompactFrontpage/raw/main/CompactFrontpage.user.js
 // @updateURL    https://github.com/MyDrift-user/CompactFrontpage/raw/main/CompactFrontpage.user.js
 // ==/UserScript==
