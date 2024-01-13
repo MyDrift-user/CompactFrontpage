@@ -2,7 +2,7 @@
 // @name         CompactFrontpage
 // @namespace    CompactFrontpage
 // @author       MyDrift (https://github.com/MyDrift-user/)
-// @version      1.0
+// @version      1.1
 // @match        *://moodle.bbbaden.ch/
 // @icon         https://github.com/MyDrift-user/CompactFrontpage/blob/main/compact.png?raw=true
 // @downloadURL  https://github.com/MyDrift-user/CompactFrontpage/raw/main/CompactFrontpage.user.js
@@ -13,46 +13,54 @@
 (function() {
     'use strict';
 
-    // Select all images within 'courses frontpage-course-list-enrolled'
-    const images = document.querySelectorAll('.courses.frontpage-course-list-enrolled img');
-
-    // Apply styles for vertical centering and responsive sizing
-    images.forEach(image => {
-        image.style.height = '80px'; // Fixed height
-        image.style.width = 'auto';  // Responsive width
-        image.style.borderRadius = '10px'; // Corner radius
-        image.style.objectFit = 'contain'; // Prevent stretching
-
-        // Ensuring the parent container is a flex container for vertical centering
-        const parentContainer = image.parentElement;
-        parentContainer.style.display = 'flex';
-        parentContainer.style.alignItems = 'center';
-        parentContainer.style.justifyContent = 'center'; // Centering horizontally as well
-
-        // Image-specific styles for centering
-        image.style.display = 'block';
-        image.style.margin = 'auto'; // For vertical and horizontal centering
-    });
-
-    // Remaining script for removing summaries and moving 'info' elements
-    const courses = document.querySelectorAll('.courses.frontpage-course-list-enrolled');
-    courses.forEach(course => {
-        const summaries = course.querySelectorAll('.summary');
-        summaries.forEach(summary => {
-            const noOverflow = summary.querySelector('.no-overflow');
-            if (!noOverflow || !noOverflow.querySelector('img')) {
-                summary.remove();
+    const searchForm = document.querySelector('.simplesearchform');
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(event) {
+            const searchInput = searchForm.querySelector('input[type="search"]');
+            // Check for empty or space-only input
+            if (!searchInput || searchInput.value.trim() === '') {
+                event.preventDefault();
             }
         });
+    }
 
-        const infoElements = course.querySelectorAll('.info');
-        const flexContainers = course.querySelectorAll('.flex-grow-1');
+    const header = document.getElementById('page-header');
+    if (header) header.remove();
 
-        infoElements.forEach((info, index) => {
-            if(flexContainers[index]) {
-                flexContainers[index].style.display = 'flex';
-                flexContainers[index].style.alignItems = 'center';
-                flexContainers[index].appendChild(info);
+    const targetHeader = document.querySelector('#frontpage-course-list > h2');
+    const searchBar = document.querySelector('.simplesearchform');
+    const elementToRemove = document.querySelector('.box.py-3.d-flex.justify-content-center');
+
+    if (searchBar && targetHeader && elementToRemove) {
+        const flexContainer = Object.assign(document.createElement('div'), {
+            style: 'display: flex; justify-content: space-between; align-items: center;'
+        });
+        flexContainer.append(targetHeader.cloneNode(true), searchBar);
+        targetHeader.replaceWith(flexContainer);
+        elementToRemove.remove();
+    } else console.error('One or more elements not found');
+
+    document.querySelectorAll('.courses.frontpage-course-list-enrolled img').forEach(image => {
+        Object.assign(image.style, {
+            height: '80px', width: 'auto', borderRadius: '10px', objectFit: 'contain', display: 'block', margin: 'auto'
+        });
+        Object.assign(image.parentElement.style, {
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
+        });
+    });
+
+    document.querySelectorAll('.courses.frontpage-course-list-enrolled').forEach(course => {
+        course.querySelectorAll('.summary').forEach(summary => {
+            if (!summary.querySelector('.no-overflow img')) summary.remove();
+        });
+
+        course.querySelectorAll('.info').forEach((info, index) => {
+            const container = course.querySelectorAll('.flex-grow-1')[index];
+            if (container) {
+                Object.assign(container.style, {
+                    display: 'flex', alignItems: 'center'
+                });
+                container.appendChild(info);
             }
         });
     });
