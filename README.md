@@ -12,6 +12,8 @@ With this userscript the Modules on the Startpage of BBBaden's Moodle adaption w
 
 #### Plans:
 
+* [ ] Fix Search
 * [ ] Fix formatting (size, centered ..)
 * [ ] Fix image sizes
 * [ ] Search for good Text size & Font
+* [ ] https://moodle.bbbaden.ch/course/view.php?id=304
