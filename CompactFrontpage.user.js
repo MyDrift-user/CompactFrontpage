@@ -2,7 +2,7 @@
 // @name         CompactFrontpage
 // @namespace    CompactFrontpage
 // @author       MyDrift (https://github.com/MyDrift-user/)
-// @version      1.1
+// @version      1.2
 // @match        *://moodle.bbbaden.ch/
 // @icon         https://github.com/MyDrift-user/CompactFrontpage/blob/main/compact.png?raw=true
 // @downloadURL  https://github.com/MyDrift-user/CompactFrontpage/raw/main/CompactFrontpage.user.js
@@ -13,13 +13,41 @@
 (function() {
     'use strict';
 
-    const searchForm = document.querySelector('.simplesearchform');
-    if (searchForm) {
-        searchForm.addEventListener('submit', function(event) {
-            const searchInput = searchForm.querySelector('input[type="search"]');
-            // Check for empty or space-only input
-            if (!searchInput || searchInput.value.trim() === '') {
-                event.preventDefault();
+    if (window.location.href.includes('https://moodle.bbbaden.ch/course/view.php?id=304')) {
+        // Compact alignment of specific classes
+        document.querySelectorAll('.course-section.main').forEach(section => {
+            // Skip section-0
+            if (!section.id.includes('section-0')) {
+                const sectionSummaryActivities = section.querySelector('.section-summary-activities.pr-2.mdl-right');
+                const courseSectionHeader = section.querySelector('.course-section-header.d-flex');
+
+                if (sectionSummaryActivities && courseSectionHeader) {
+                    const flexContainer = document.createElement('div');
+                    flexContainer.style.display = 'flex';
+                    flexContainer.style.justifyContent = 'space-between';
+                    flexContainer.style.alignItems = 'center';
+
+                    flexContainer.appendChild(courseSectionHeader.cloneNode(true));
+                    flexContainer.appendChild(sectionSummaryActivities.cloneNode(true));
+
+                    courseSectionHeader.replaceWith(flexContainer);
+                    sectionSummaryActivities.remove();
+                }
+            }
+        });
+
+        // Remove "no-overflow" classes, excluding section-0
+        const noOverflowElements = document.querySelectorAll('.no-overflow');
+        noOverflowElements.forEach(element => {
+            if (!element.closest('#section-0')) {
+                element.remove();
+            }
+        });
+
+        // Remove specific div elements, excluding section-0
+        document.querySelectorAll('div.content').forEach(div => {
+            if (!div.closest('#section-0') && div.querySelector('.section_availability') && div.querySelector('.course-description-item')) {
+                div.remove();
             }
         });
     }
