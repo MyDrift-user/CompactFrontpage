@@ -13,6 +13,15 @@
 (function() {
     'use strict';
 
+
+    // Name
+    const scriptName = 'CompactFrontpage'; 
+    const installedScripts = JSON.parse(localStorage.getItem('InstalledScripts') || '[]');
+    if (!installedScripts.includes(scriptName)) {
+        installedScripts.push(scriptName);
+        localStorage.setItem('InstalledScripts', JSON.stringify(installedScripts));
+    }
+    
     if (window.location.href.includes('https://moodle.bbbaden.ch/course/view.php?id=304')) {
         // Compact alignment of specific classes
         document.querySelectorAll('.course-section.main').forEach(section => {
