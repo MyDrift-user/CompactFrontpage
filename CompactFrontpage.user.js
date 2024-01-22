@@ -2,26 +2,20 @@
 // @name         CompactFrontpage
 // @namespace    CompactFrontpage
 // @author       MyDrift (https://github.com/MyDrift-user/)
-// @version      1.2
-// @match        *://moodle.bbbaden.ch/
+// @version      1.3
+// @match        *://moodle.bbbaden.ch/*
 // @icon         https://github.com/MyDrift-user/CompactFrontpage/blob/main/compact.png?raw=true
 // @downloadURL  https://github.com/MyDrift-user/CompactFrontpage/raw/main/CompactFrontpage.user.js
 // @updateURL    https://github.com/MyDrift-user/CompactFrontpage/raw/main/CompactFrontpage.user.js
+// @require      https://github.com/black-backdoor/DataBridge/raw/main/DataBridge.lib.user.js
+// @grant        GM_info
 // ==/UserScript==
 
 
 (function() {
     'use strict';
 
-
-    // Name
-    const scriptName = 'CompactFrontpage'; 
-    const installedScripts = JSON.parse(localStorage.getItem('InstalledScripts') || '[]');
-    if (!installedScripts.includes(scriptName)) {
-        installedScripts.push(scriptName);
-        localStorage.setItem('InstalledScripts', JSON.stringify(installedScripts));
-    }
-    
+    //####################### ID304 FIX #######################
     if (window.location.href.includes('https://moodle.bbbaden.ch/course/view.php?id=304')) {
         // Compact alignment of specific classes
         document.querySelectorAll('.course-section.main').forEach(section => {
@@ -61,44 +55,70 @@
         });
     }
 
-    const header = document.getElementById('page-header');
-    if (header) header.remove();
+    //####################### HOMEPAGE FIX #######################
+    if (window.location.href.includes('https://moodle.bbbaden.ch/')) {
+        const header = document.getElementById('page-header');
+        if (header) header.remove();
 
-    const targetHeader = document.querySelector('#frontpage-course-list > h2');
-    const searchBar = document.querySelector('.simplesearchform');
-    const elementToRemove = document.querySelector('.box.py-3.d-flex.justify-content-center');
+        const targetHeader = document.querySelector('#frontpage-course-list > h2');
+        const searchBar = document.querySelector('.simplesearchform');
+        const elementToRemove = document.querySelector('.box.py-3.d-flex.justify-content-center');
 
-    if (searchBar && targetHeader && elementToRemove) {
-        const flexContainer = Object.assign(document.createElement('div'), {
-            style: 'display: flex; justify-content: space-between; align-items: center;'
-        });
-        flexContainer.append(targetHeader.cloneNode(true), searchBar);
-        targetHeader.replaceWith(flexContainer);
-        elementToRemove.remove();
-    } else console.error('One or more elements not found');
+        if (searchBar && targetHeader && elementToRemove) {
+            const flexContainer = Object.assign(document.createElement('div'), {
+                style: 'display: flex; justify-content: space-between; align-items: center;'
+            });
+            flexContainer.append(targetHeader.cloneNode(true), searchBar);
+            targetHeader.replaceWith(flexContainer);
+            elementToRemove.remove();
+        } else console.error('One or more elements not found');
 
-    document.querySelectorAll('.courses.frontpage-course-list-enrolled img').forEach(image => {
-        Object.assign(image.style, {
-            height: '80px', width: 'auto', borderRadius: '10px', objectFit: 'contain', display: 'block', margin: 'auto'
-        });
-        Object.assign(image.parentElement.style, {
-            display: 'flex', alignItems: 'center', justifyContent: 'center'
-        });
-    });
-
-    document.querySelectorAll('.courses.frontpage-course-list-enrolled').forEach(course => {
-        course.querySelectorAll('.summary').forEach(summary => {
-            if (!summary.querySelector('.no-overflow img')) summary.remove();
+        document.querySelectorAll('.courses.frontpage-course-list-enrolled img').forEach(image => {
+            Object.assign(image.style, {
+                height: '80px', width: 'auto', borderRadius: '10px', objectFit: 'contain', display: 'block', margin: 'auto'
+            });
+            Object.assign(image.parentElement.style, {
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+            });
         });
 
-        course.querySelectorAll('.info').forEach((info, index) => {
-            const container = course.querySelectorAll('.flex-grow-1')[index];
-            if (container) {
-                Object.assign(container.style, {
-                    display: 'flex', alignItems: 'center'
-                });
-                container.appendChild(info);
-            }
+        document.querySelectorAll('.courses.frontpage-course-list-enrolled').forEach(course => {
+            course.querySelectorAll('.summary').forEach(summary => {
+                if (!summary.querySelector('.no-overflow img')) summary.remove();
+            });
+
+            course.querySelectorAll('.info').forEach((info, index) => {
+                const container = course.querySelectorAll('.flex-grow-1')[index];
+                if (container) {
+                    Object.assign(container.style, {
+                        display: 'flex', alignItems: 'center'
+                    });
+                    container.appendChild(info);
+                }
+            });
         });
-    });
+    }
+
+  //####################### DataBridge #######################
+  if (window.location.href.includes('https://moodle.bbbaden.ch/userscript/extensions')) {
+      // Create a new DataBridge
+      const UserScriptManagerCon = new Connection("BBBUserScriptManager");
+
+      // Register an event listener for the extensionInstalled event
+      Protocol.registerMessageType(UserScriptManagerCon, 'getInstalled', function (msg) {
+          UserScriptManagerCon.send({
+              "header": {
+                  "receiver": msg.header.sender,
+                  "protocolVersion": "1.0",
+                  "messageType": "extensionInstalled",
+              },
+              "body": {
+                  "script": {
+                      "scriptName": GM_info.script.name,
+                      "scriptVersion": GM_info.script.version,
+                  }
+              }
+          });
+      });
+  }
 })();
