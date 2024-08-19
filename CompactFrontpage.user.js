@@ -7,7 +7,6 @@
 // @icon         https://github.com/MyDrift-user/CompactFrontpage/blob/main/compact.png?raw=true
 // @downloadURL  https://github.com/MyDrift-user/CompactFrontpage/raw/main/CompactFrontpage.user.js
 // @updateURL    https://github.com/MyDrift-user/CompactFrontpage/raw/main/CompactFrontpage.user.js
-// @require      https://github.com/black-backdoor/DataBridge/raw/main/DataBridge.lib.user.js
 // @grant        GM_info
 // ==/UserScript==
 
